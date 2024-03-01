@@ -28,7 +28,7 @@ public class FinancialGoalRepository : IFinancialGoalRepository
 
     public async Task<FinancialGoal?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.FinancialGoals.SingleOrDefaultAsync(b => b.Id == id, cancellationToken);
+        return await _dbContext.FinancialGoals.Include(f => f.Transactions).SingleOrDefaultAsync(f => f.Id == id, cancellationToken);
     }
 
     public async Task<FinancialGoal?> GetSingleByAsync(Expression<Func<FinancialGoal, bool>> predicate, CancellationToken cancellationToken = default)

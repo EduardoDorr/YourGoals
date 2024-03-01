@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 using YourGoals.Core.Models;
 using YourGoals.Domain.Transactions.Entities;
-using YourGoals.Domain.FinancialGoals.Interfaces;
 using YourGoals.Infrastructure.Contexts;
 using YourGoals.Infrastructure.Extensions;
+using YourGoals.Domain.Transactions.Interfaces;
 
 namespace YourGoals.Infrastructure.Repositories;
 
@@ -28,7 +28,7 @@ public class TransactionRepository : ITransactionRepository
 
     public async Task<Transaction?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Transactions.SingleOrDefaultAsync(b => b.Id == id, cancellationToken);
+        return await _dbContext.Transactions.Include(t => t.FinancialGoal).SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
     public async Task<Transaction?> GetSingleByAsync(Expression<Func<Transaction, bool>> predicate, CancellationToken cancellationToken = default)
