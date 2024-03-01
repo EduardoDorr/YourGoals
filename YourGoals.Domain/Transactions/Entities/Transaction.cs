@@ -11,7 +11,7 @@ public class Transaction : BaseEntity
     public DateTime TransactionDate { get; private set; }
     public TransactionType Type { get; private set; }
 
-    public virtual FinancialGoal FinancialGoal { get; private set; }
+    public virtual FinancialGoal? FinancialGoal { get; private set; }
 
     public Transaction(Guid financialGoalId, decimal amount, DateTime transactionDate, TransactionType type)
     {
@@ -19,5 +19,15 @@ public class Transaction : BaseEntity
         Amount = amount;
         TransactionDate = transactionDate;
         Type = type;
+    }
+
+    public void Update(Guid financialGoalId, decimal amount, DateTime transactionDate, TransactionType type)
+    {
+        FinancialGoalId = financialGoalId;
+        Amount = amount;
+        TransactionDate = transactionDate;
+        Type = type;
+
+        UpdatedAt = DateTime.Now;
     }
 }

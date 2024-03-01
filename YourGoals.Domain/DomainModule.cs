@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
+using YourGoals.Domain.Transactions.Services;
+using YourGoals.Domain.FinancialGoals.Services;
+
 public static class DomainModule
 {
     public static IServiceCollection AddDomain(this IServiceCollection services)
@@ -11,7 +14,8 @@ public static class DomainModule
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
-        //services.AddTransient<ITransaction, TransactionService>();
+        services.AddTransient<ITransactionService, TransactionService>();
+        services.AddTransient<IFinancialGoalService, FinancialGoalService>();
 
         return services;
     }

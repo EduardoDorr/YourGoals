@@ -1,6 +1,6 @@
 ﻿using YourGoals.Core.Results.Errors;
 
-namespace YourGoals.Domain.FinancialGoals.DomainErrors;
+namespace YourGoals.Domain.FinancialGoals.Errors;
 
 public record FinancialGoalErrors(string Code, string Message) : IError
 {
@@ -15,4 +15,7 @@ public record FinancialGoalErrors(string Code, string Message) : IError
 
     public static readonly Error NotFound =
         new("FinancialGoal.NotFound", "Not found");
+
+    public static readonly Error TransactionAmountIsNotValid =
+        new("FinancialGoal.TransactionAmountIsNotValid", "Transaction amount is not valid");
 }

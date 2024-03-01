@@ -18,9 +18,10 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
     public FinancialGoalStatus Status { get; private set; }
     public decimal? InterestRate { get; private set; }
     public DateTime? Deadline { get; private set; }
-    public decimal? IdealMonthlySaving { get; init; }
+    public decimal? IdealMonthlySaving { get; private set; }
 
-    public virtual ICollection<Transaction> Transactions { get; private set; } = new List<Transaction>();
+    private readonly List<Transaction> _transactions = new List<Transaction>();
+    public virtual IReadOnlyCollection<Transaction> Transactions => _transactions;
 
     public static FinancialGoalBuilder CreateBuilder(string name, decimal goalAmount) => new(name, goalAmount);
 
@@ -44,7 +45,29 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
         InterestRate = interestRate;
         Deadline = deadline;
 
+        IdealMonthlySaving = GetIdealMonthlySaving();
+
         UpdatedAt = DateTime.Now;
+    }
+
+    public void Deposit(decimal amount) => CurrentAmount += amount;
+    public void Withdraw(decimal amount) => CurrentAmount -= amount;
+    public bool GoalAchieved() => CurrentAmount >= GoalAmount;
+    public void ChangeStatus(FinancialGoalStatus status) => Status = status;
+
+    public void ValidateGoalAchievement()
+    {
+        if (GoalAchieved())
+            ChangeStatus(FinancialGoalStatus.Completed);
+        else
+            ChangeStatus(FinancialGoalStatus.InProgress);
+    }
+
+    public override void Deactivate()
+    {
+        Status = FinancialGoalStatus.Cancelled;
+
+        base.Deactivate();
     }
 
     private decimal? GetIdealMonthlySaving()
@@ -62,7 +85,7 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
         return Math.Round((decimal)_idealMonthlySaving, 2);
 
         decimal GetNumberOfMonths() =>
-            (decimal)((Deadline - CreatedAt.Date).Value.TotalDays / AVERAGE_DAYS_PER_MONTH);
+            (int)((Deadline.Value.Date - CreatedAt.Date).TotalDays / AVERAGE_DAYS_PER_MONTH);
 
         decimal GetInterestByMonths() =>
             (decimal)Math.Pow((double)(1 + GetInterestInPercentage()), (double)GetNumberOfMonths());
