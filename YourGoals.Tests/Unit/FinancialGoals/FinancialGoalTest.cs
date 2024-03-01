@@ -1,6 +1,4 @@
-﻿using YourGoals.Tests.Utils.FinancialGoals;
-using YourGoals.Domain.FinancialGoals.Enums;
-using YourGoals.Domain.FinancialGoals.Builder;
+﻿using YourGoals.Domain.FinancialGoals.Enums;
 
 namespace YourGoals.Tests.Unit.FinancialGoals;
 

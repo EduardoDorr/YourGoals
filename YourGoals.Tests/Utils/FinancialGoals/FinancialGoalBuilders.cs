@@ -10,7 +10,6 @@ public static class FinancialGoalBuilders
     public const decimal INITIAL_AMOUNT = 1000.0m;
     public const decimal INTEREST_RATE = 1.0m;
     public const int NUMBER_OF_MONTHS = 40;
-    private const double AVERAGE_DAYS_PER_MONTH = 30.416667;
 
     public static FinancialGoalBuilder GetFinancialGoalSimple()
     {
@@ -19,26 +18,26 @@ public static class FinancialGoalBuilders
         return financialGoalBuilder;
     }
 
-    public static FinancialGoalBuilder GetFinancialGoalWithDeadline()
+    public static FinancialGoalBuilder GetFinancialGoalWithDeadline(int numberOfMonths = NUMBER_OF_MONTHS)
     {
         var financialGoalBuilder = GetFinancialGoalSimple();
-        financialGoalBuilder.WithDeadline(DateTime.Now.AddDays(NUMBER_OF_MONTHS * AVERAGE_DAYS_PER_MONTH));
+        financialGoalBuilder.WithDeadline(DateTime.Now.AddMonths(numberOfMonths));
 
         return financialGoalBuilder;
     }
 
-    public static FinancialGoalBuilder GetFinancialGoalWithDeadlineAndInitialAmount()
+    public static FinancialGoalBuilder GetFinancialGoalWithDeadlineAndInitialAmount(decimal initialAmount = INITIAL_AMOUNT)
     {
         var financialGoalBuilder = GetFinancialGoalWithDeadline();
-        financialGoalBuilder.WithInitialAmount(INITIAL_AMOUNT);
+        financialGoalBuilder.WithInitialAmount(initialAmount);
 
         return financialGoalBuilder;
     }
 
-    public static FinancialGoalBuilder GetFinancialGoalWithDeadlineAndInitialAmountAndInterestRate()
+    public static FinancialGoalBuilder GetFinancialGoalWithDeadlineAndInitialAmountAndInterestRate(decimal interestRate = INTEREST_RATE)
     {
         var financialGoalBuilder = GetFinancialGoalWithDeadlineAndInitialAmount();
-        financialGoalBuilder.WithInterestRate(INTEREST_RATE);
+        financialGoalBuilder.WithInterestRate(interestRate);
 
         return financialGoalBuilder;
     }
