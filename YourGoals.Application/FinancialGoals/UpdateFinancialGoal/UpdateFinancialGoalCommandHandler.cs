@@ -5,8 +5,8 @@ using MediatR;
 using YourGoals.Core.Results;
 using YourGoals.Core.Interfaces;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Domain.FinancialGoals.DomainErrors;
 using YourGoals.Application.Errors;
+using YourGoals.Domain.FinancialGoals.Errors;
 
 namespace YourGoals.Application.FinancialGoals.UpdateFinancialGoal;
 
@@ -39,7 +39,7 @@ public sealed class UpdateFinancialGoalCommandHandler : IRequestHandler<UpdateFi
         var updated = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
         if (!updated)
-            return Result.Fail(FinancialGoalErrors.CannotBeUpdated);
+            return Result.Fail(new HttpStatusCodeError(FinancialGoalErrors.CannotBeUpdated, HttpStatusCode.NotFound));
 
         return Result.Ok();
     }

@@ -18,7 +18,7 @@ public sealed class GetFinancialGoalsQueryHandler : IRequestHandler<GetFinancial
 
     public async Task<Result<PaginationResult<FinancialGoalViewModel>>> Handle(GetFinancialGoalsQuery request, CancellationToken cancellationToken)
     {
-        var paginationFinancialGoals = await _financialGoalRepository.GetAllAsync(request.Page, request.PageSize);
+        var paginationFinancialGoals = await _financialGoalRepository.GetAllAsync(request.Page, request.PageSize, cancellationToken);
 
         var financialGoalsViewModel = paginationFinancialGoals.Data.ToViewModel();
 

@@ -1,10 +1,13 @@
-﻿using MediatR;
+﻿using System.Net;
+
+using MediatR;
 
 using YourGoals.Core.Results;
 using YourGoals.Core.Interfaces;
 using YourGoals.Domain.FinancialGoals.Entities;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Domain.FinancialGoals.DomainErrors;
+using YourGoals.Application.Errors;
+using YourGoals.Domain.FinancialGoals.Errors;
 
 namespace YourGoals.Application.FinancialGoals.CreateFinancialGoal;
 
@@ -33,7 +36,7 @@ internal sealed class CreateFinancialGoalCommandHandler : IRequestHandler<Create
         var created = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
         if (!created)
-            return Result.Fail<Guid>(FinancialGoalErrors.CannotBeCreated);
+            return Result.Fail<Guid>(new HttpStatusCodeError(FinancialGoalErrors.CannotBeCreated, HttpStatusCode.InternalServerError));
 
         return Result.Ok(financialGoal.Id);
     }

@@ -1,11 +1,12 @@
 ﻿using System.Net;
 
 using MediatR;
-using YourGoals.Domain.FinancialGoals.Interfaces;
+
 using YourGoals.Core.Results;
+using YourGoals.Domain.FinancialGoals.Interfaces;
 using YourGoals.Application.Errors;
-using YourGoals.Domain.FinancialGoals.DomainErrors;
 using YourGoals.Application.FinancialGoals.Models;
+using YourGoals.Domain.FinancialGoals.Errors;
 
 namespace YourGoals.Application.FinancialGoals.GetFinancialGoal;
 

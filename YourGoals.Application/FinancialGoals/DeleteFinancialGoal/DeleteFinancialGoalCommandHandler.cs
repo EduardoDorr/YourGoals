@@ -5,8 +5,8 @@ using MediatR;
 using YourGoals.Core.Results;
 using YourGoals.Core.Interfaces;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Domain.FinancialGoals.DomainErrors;
 using YourGoals.Application.Errors;
+using YourGoals.Domain.FinancialGoals.Errors;
 
 
 namespace YourGoals.Application.FinancialGoals.DeleteFinancialGoal;
@@ -36,7 +36,7 @@ public sealed class DeleteFinancialGoalCommandHandler : IRequestHandler<DeleteFi
         var updated = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
         if (!updated)
-            return Result.Fail(FinancialGoalErrors.CannotBeDeleted);
+            return Result.Fail(new HttpStatusCodeError(FinancialGoalErrors.CannotBeDeleted, HttpStatusCode.NotFound));
 
         return Result.Ok();
     }

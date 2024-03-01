@@ -2,7 +2,7 @@
 
 namespace YourGoals.Application.FinancialGoals.CreateFinancialGoal;
 
-public class CreateFinancialGoalCommandValidator : AbstractValidator<CreateFinancialGoalCommand>
+public sealed class CreateFinancialGoalCommandValidator : AbstractValidator<CreateFinancialGoalCommand>
 {
     public CreateFinancialGoalCommandValidator()
     {
@@ -20,12 +20,12 @@ public class CreateFinancialGoalCommandValidator : AbstractValidator<CreateFinan
 
         RuleFor(r => r.InterestRate)
             .GreaterThan(0)
-            .When(value => value is not null)
+            .When(r => r.InterestRate is not null)
             .WithMessage("InterestRate must be valid");
 
         RuleFor(r => r.Deadline)
             .GreaterThan(DateTime.Now)
-            .When(value => value is not null)
+            .When(r => r.Deadline is not null)
             .WithMessage("Deadline must be valid");
     }
 }

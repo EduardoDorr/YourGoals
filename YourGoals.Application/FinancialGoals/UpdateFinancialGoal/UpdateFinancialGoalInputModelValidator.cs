@@ -2,7 +2,7 @@
 
 namespace YourGoals.Application.FinancialGoals.UpdateFinancialGoal;
 
-public class UpdateFinancialGoalInputModelValidator : AbstractValidator<UpdateFinancialGoalInputModel>
+public sealed class UpdateFinancialGoalInputModelValidator : AbstractValidator<UpdateFinancialGoalInputModel>
 {
     public UpdateFinancialGoalInputModelValidator()
     {
