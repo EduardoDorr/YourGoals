@@ -6,6 +6,6 @@ namespace YourGoals.Application.Errors;
 
 public record HttpStatusCodeError(string Code, string Message, HttpStatusCode StatusCode) : IError
 {
-    public HttpStatusCodeError(Error error, HttpStatusCode StatusCode)
+    public HttpStatusCodeError(IError error, HttpStatusCode StatusCode)
         : this(error.Code, error.Message, StatusCode) { }
 }
