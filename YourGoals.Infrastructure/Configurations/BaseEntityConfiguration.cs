@@ -14,12 +14,26 @@ internal abstract class BaseEntityConfiguration<TBase> : IEntityTypeConfiguratio
         builder.Property(b => b.Active)
                .IsRequired();
 
+        builder.HasIndex(b => b.Active);
+
         builder.Property(b => b.CreatedAt)
                .HasColumnType("datetime")
                .IsRequired();
 
         builder.Property(b => b.UpdatedAt)
                .HasColumnType("datetime")
+               .IsRequired();
+
+        builder.Property(b => b.Year)
+               .HasColumnType("smallint")
+               .IsRequired();
+
+        builder.Property(b => b.Month)
+               .HasColumnType("tinyint")
+               .IsRequired();
+
+        builder.Property(b => b.Day)
+               .HasColumnType("tinyint")
                .IsRequired();
     }
 }

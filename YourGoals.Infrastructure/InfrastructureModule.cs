@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using YourGoals.Core.Interfaces;
 using YourGoals.Domain.FinancialGoals.Interfaces;
+using YourGoals.Domain.Transactions.Interfaces;
 using YourGoals.Infrastructure.Contexts;
 using YourGoals.Infrastructure.Repositories;
 
@@ -22,7 +23,7 @@ public static class InfrastructureModule
 
     private static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration["DatabaseSettings:YouGoalsConnectionString"];
+        var connectionString = configuration["YouGoalsConnectionString"];
 
         services.AddDbContext<YourGoalsDbContext>(opts =>
         {
