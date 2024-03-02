@@ -32,6 +32,7 @@ public static class ServiceConfiguration
         {
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             options.JsonSerializerOptions.WriteIndented = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
         builder.Services.AddEndpointsApiExplorer();
@@ -55,6 +56,8 @@ public static class ServiceConfiguration
 
     public static WebApplication ConfigureApplication(this WebApplication app)
     {
+        app.UseStaticFiles();
+
         app.UseSwagger();
 
         app.UseSwaggerUI();

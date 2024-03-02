@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-
-using YourGoals.Core.Interfaces;
+using YourGoals.Core.Repositories;
 using YourGoals.Infrastructure.Contexts;
 
 namespace YourGoals.Infrastructure.Repositories;

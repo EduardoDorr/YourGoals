@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 using YourGoals.Core.Models;
 using YourGoals.Core.Entities;
-using YourGoals.Core.Interfaces;
 using YourGoals.Infrastructure.Contexts;
 using YourGoals.Infrastructure.Extensions;
+using YourGoals.Core.Repositories;
 
 namespace YourGoals.Infrastructure.Repositories;
 

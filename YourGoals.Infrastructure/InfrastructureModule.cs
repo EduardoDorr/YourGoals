@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using YourGoals.Core.Interfaces;
-using YourGoals.Domain.FinancialGoals.Interfaces;
+using YourGoals.Core.Repositories;
 using YourGoals.Domain.Transactions.Interfaces;
+using YourGoals.Domain.FinancialGoals.Interfaces;
+using YourGoals.Application.Reports.Service;
+using YourGoals.Infrastructure.MailApi;
 using YourGoals.Infrastructure.Contexts;
 using YourGoals.Infrastructure.Repositories;
 
@@ -16,7 +18,9 @@ public static class InfrastructureModule
     {
         services.AddDbContexts(configuration)
                 .AddRepositories()
-                .AddUnitOfWork();
+                .AddUnitOfWork()
+                .AddServices()
+                .AddHttpClients(configuration);
 
         return services;
     }
@@ -46,6 +50,23 @@ public static class InfrastructureModule
     private static IServiceCollection AddUnitOfWork(this IServiceCollection services)
     {
         services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddTransient<IMailApi, WebMailApi>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpClient("WebMailApi", client =>
+        {
+            client.BaseAddress = new Uri(configuration["WebMailAPI:Url"]);
+        });
 
         return services;
     }

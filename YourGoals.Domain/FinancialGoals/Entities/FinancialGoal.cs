@@ -1,5 +1,4 @@
 ﻿using YourGoals.Core.Entities;
-using YourGoals.Core.Interfaces;
 using YourGoals.Domain.FinancialGoals.Enums;
 using YourGoals.Domain.FinancialGoals.Builder;
 using YourGoals.Domain.Transactions.Entities;
@@ -19,13 +18,14 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
     public decimal? InterestRate { get; private set; }
     public DateTime? Deadline { get; private set; }
     public decimal? IdealMonthlySaving { get; private set; }
+    public string? CoverImage { get; private set; }
 
     private readonly List<Transaction> _transactions = new List<Transaction>();
     public virtual IReadOnlyCollection<Transaction> Transactions => _transactions;
 
     public static FinancialGoalBuilder CreateBuilder(string name, decimal goalAmount) => new(name, goalAmount);
 
-    public FinancialGoal(string name, decimal goalAmount, decimal initialAmount, decimal? interestRate, DateTime? deadline)
+    public FinancialGoal(string name, decimal goalAmount, decimal initialAmount, decimal? interestRate, DateTime? deadline, string? coverImage)
     {
         Name = name;
         GoalAmount = goalAmount;
@@ -33,6 +33,7 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
         InitialAmount = initialAmount;
         InterestRate = interestRate;
         Deadline = deadline;
+        CoverImage = coverImage;
         Status = FinancialGoalStatus.InProgress;
 
         IdealMonthlySaving = GetIdealMonthlySaving();
@@ -48,6 +49,11 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
         IdealMonthlySaving = GetIdealMonthlySaving();
 
         UpdatedAt = DateTime.Now;
+    }
+
+    public void AddCoverImage(string coverImage)
+    {
+        CoverImage = coverImage;
     }
 
     public void Deposit(decimal amount) => CurrentAmount += amount;

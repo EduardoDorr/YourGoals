@@ -3,7 +3,7 @@
 using YourGoals.Core.Models;
 using YourGoals.Core.Entities;
 
-namespace YourGoals.Core.Interfaces;
+namespace YourGoals.Core.Repositories;
 
 public interface IReadableRepository<TEntity> where TEntity : BaseEntity
 {

@@ -1,0 +1,3 @@
+﻿namespace YourGoals.Application.FinancialGoals.UploadFinancialGoalCover;
+
+public sealed record UploadFinancialGoalCoverInputModel(string CoverImage);

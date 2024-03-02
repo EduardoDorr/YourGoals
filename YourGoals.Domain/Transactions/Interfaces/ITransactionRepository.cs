@@ -1,4 +1,4 @@
-﻿using YourGoals.Core.Interfaces;
+﻿using YourGoals.Core.Repositories;
 using YourGoals.Domain.Transactions.Entities;
 
 namespace YourGoals.Domain.Transactions.Interfaces;

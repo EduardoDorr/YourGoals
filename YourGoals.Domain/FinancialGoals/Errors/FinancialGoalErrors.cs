@@ -18,4 +18,7 @@ public record FinancialGoalErrors(string Code, string Message) : IError
 
     public static readonly Error TransactionAmountIsNotValid =
         new("FinancialGoal.TransactionAmountIsNotValid", "Transaction amount is not valid");
+
+    public static readonly Error InvalidBase64Image =
+        new("FinancialGoal.InvalidBase64Image", "Image is not a valid Base64");
 }

@@ -3,10 +3,10 @@
 using MediatR;
 
 using YourGoals.Core.Results;
-using YourGoals.Core.Interfaces;
 using YourGoals.Domain.FinancialGoals.Interfaces;
 using YourGoals.Application.Errors;
 using YourGoals.Domain.FinancialGoals.Errors;
+using YourGoals.Core.Repositories;
 
 
 namespace YourGoals.Application.FinancialGoals.DeleteFinancialGoal;

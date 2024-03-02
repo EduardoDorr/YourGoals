@@ -1,5 +1,6 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using MediatR;
 
 using YourGoals.Core.Results;
 using YourGoals.API.Extensions;
@@ -8,6 +9,7 @@ using YourGoals.Application.FinancialGoals.GetFinancialGoals;
 using YourGoals.Application.FinancialGoals.CreateFinancialGoal;
 using YourGoals.Application.FinancialGoals.UpdateFinancialGoal;
 using YourGoals.Application.FinancialGoals.DeleteFinancialGoal;
+using YourGoals.Application.FinancialGoals.UploadFinancialGoalCover;
 
 namespace YourGoals.API.Controllers;
 
@@ -65,6 +67,19 @@ public class FinancialGoalsController : ControllerBase
                 inputModel.InitialAmount,
                 inputModel.InterestRate,
                 inputModel.Deadline);
+
+        var result = await _mediator.Send(command);
+
+        return result.Match(
+        onSuccess: NoContent,
+        onFailure: this.GetResult);
+    }
+
+    [HttpPut("{id}/upload-cover")]
+    public async Task<IActionResult> UploadCover(Guid id, [FromBody] UploadFinancialGoalCoverInputModel inputModel)
+    {
+        var command =
+            new UploadFinancialGoalCoverCommand(id, inputModel.CoverImage);
 
         var result = await _mediator.Send(command);
 

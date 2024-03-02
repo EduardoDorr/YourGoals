@@ -38,6 +38,9 @@ internal class FinancialGoalConfiguration : BaseEntityConfiguration<FinancialGoa
         builder.Property(b => b.IdealMonthlySaving)
                .HasColumnType("numeric(18,2)");
 
+        builder.Property(b => b.CoverImage)
+               .HasMaxLength(500);
+
         builder.Property(b => b.Status)
                .IsRequired();
 

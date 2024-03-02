@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using YourGoals.Application.Reports.Service;
 
 namespace YourGoals.Application;
 
@@ -12,7 +13,8 @@ public static class ApplicationModule
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddMediator()
-                .AddValidator();
+                .AddValidator()
+                .AddServices();
 
         return services;
     }
@@ -31,6 +33,13 @@ public static class ApplicationModule
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient);
         services.AddFluentValidationAutoValidation();
+
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddTransient<IReportService, ReportService>();
 
         return services;
     }

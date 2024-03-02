@@ -3,7 +3,6 @@
 using MediatR;
 
 using YourGoals.Core.Results;
-using YourGoals.Core.Interfaces;
 using YourGoals.Domain.Transactions.Services;
 using YourGoals.Domain.FinancialGoals.Services;
 using YourGoals.Domain.FinancialGoals.Interfaces;
@@ -11,6 +10,7 @@ using YourGoals.Application.Errors;
 using YourGoals.Domain.FinancialGoals.Errors;
 using YourGoals.Domain.Transactions.Errors;
 using YourGoals.Domain.Transactions.Interfaces;
+using YourGoals.Core.Repositories;
 
 namespace YourGoals.Application.Transactions.CreateTransaction;
 

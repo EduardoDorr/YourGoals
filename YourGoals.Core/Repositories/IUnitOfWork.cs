@@ -1,4 +1,4 @@
-﻿namespace YourGoals.Core.Interfaces;
+﻿namespace YourGoals.Core.Repositories;
 
 public interface IUnitOfWork
 {

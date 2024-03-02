@@ -9,6 +9,7 @@ public class FinancialGoalBuilder
     private decimal _initialAmount;
     private decimal? _interestRate;
     private DateTime? _deadline;
+    private string? _coverImage;
 
     public FinancialGoalBuilder(string name, decimal goalAmount)
     {
@@ -37,8 +38,15 @@ public class FinancialGoalBuilder
         return this;
     }
 
+    public FinancialGoalBuilder WithCoverImage(string? coverImage)
+    {
+        _coverImage = coverImage;
+
+        return this;
+    }
+
     public FinancialGoal Build()
     {
-        return new FinancialGoal(_name, _goalAmount, _initialAmount, _interestRate, _deadline);
+        return new FinancialGoal(_name, _goalAmount, _initialAmount, _interestRate, _deadline, _coverImage);
     }
 }
