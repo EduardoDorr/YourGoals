@@ -14,13 +14,17 @@ public sealed class ReportService : IReportService
 {
     private readonly string _staticFilesPath;
 
-    private readonly XFont _titleFont = new("Verdana", 20, XFontStyle.Bold);
-    private readonly XFont _subTitleFont = new("Verdana", 12, XFontStyle.Bold);
-    private readonly XFont _subTextFont = new("Verdana", 10, XFontStyle.Regular);
+    private readonly XFont _titleFont;
+    private readonly XFont _subTitleFont;
+    private readonly XFont _contentFont;
 
     public ReportService(IHostEnvironment environment)
     {
         _staticFilesPath = Path.Combine(environment.ContentRootPath, "wwwroot");
+
+        _titleFont = new("Verdana", 20, XFontStyle.Bold);
+        _subTitleFont = new("Verdana", 12, XFontStyle.Bold);
+        _contentFont = new("Verdana", 10, XFontStyle.Regular);
     }
 
     public Result<string> GenerateFinancialGoalReport(FinancialGoal financialGoal)
@@ -33,35 +37,9 @@ public sealed class ReportService : IReportService
 
         var height = 5;
 
-        height = GenerateHeader(financialGoal, page, graphics, height);
+        height = GenerateHeader(financialGoal, graphics, height);
 
-        var transactionTypes = new List<TransactionType>();
-
-        foreach (var transaction in transactions.OrderBy(t => t.Type))
-        {
-            if (!transactionTypes.Contains(transaction.Type))
-            {
-                height += 10;
-
-                switch (transaction.Type)
-                {
-                    case TransactionType.Deposit:
-                        height = GenerateByType("Depósito", transactions.Where(x => x.Type == TransactionType.Deposit).ToList(), graphics, page, height);
-                        transactionTypes.Add(TransactionType.Deposit);
-                        break;
-                    case TransactionType.Withdraw:
-                        height = GenerateByType("Saque", transactions.Where(x => x.Type == TransactionType.Withdraw).ToList(), graphics, page, height);
-                        transactionTypes.Add(TransactionType.Withdraw);
-                        break;
-                    case TransactionType.Interest:
-                        height = GenerateByType("JAM", transactions.Where(x => x.Type == TransactionType.Interest).ToList(), graphics, page, height);
-                        transactionTypes.Add(TransactionType.Interest);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        height = GenerateTransactions(transactions, graphics, height);
 
         var financialGoalReportsDirectory = Path.Combine(_staticFilesPath, "reports", "financialGoalTransactions");
         var financialGoalReportFullPath = Path.Combine(financialGoalReportsDirectory, $"{financialGoal.Name}-Report.pdf");
@@ -74,82 +52,66 @@ public sealed class ReportService : IReportService
         return Result.Ok(financialGoalReportFullPath);
     }
 
-    private int GenerateHeader(FinancialGoal financialGoal, PdfPage page, XGraphics graphics, int height)
+    private int GenerateTransactions(IReadOnlyCollection<Transaction> transactions, XGraphics graphics, int height)
     {
-        graphics.DrawString
-                    (
-                        "RELATÓRIO",
-                        _titleFont,
-                        XBrushes.Black,
-                        new XRect(0, height, page.Width, page.Height),
-                        new XStringFormat()
-                        {
-                            LineAlignment = XLineAlignment.Near,
-                            Alignment = XStringAlignment.Center
-                        }
-                    );
+        var transactionTypes = new List<TransactionType>();
+        var page = graphics.PdfPage;
+
+        foreach (var transaction in transactions.OrderBy(t => t.Type))
+        {
+            if (!transactionTypes.Contains(transaction.Type))
+            {
+                height += 10;
+
+                switch (transaction.Type)
+                {
+                    case TransactionType.Deposit:
+                        height = GenerateByType("Depósito", transactions.Where(x => x.Type == TransactionType.Deposit).ToList(), graphics, height);
+                        transactionTypes.Add(TransactionType.Deposit);
+                        break;
+                    case TransactionType.Withdraw:
+                        height = GenerateByType("Saque", transactions.Where(x => x.Type == TransactionType.Withdraw).ToList(), graphics, height);
+                        transactionTypes.Add(TransactionType.Withdraw);
+                        break;
+                    case TransactionType.Interest:
+                        height = GenerateByType("JAM", transactions.Where(x => x.Type == TransactionType.Interest).ToList(), graphics, height);
+                        transactionTypes.Add(TransactionType.Interest);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return height;
+    }
+
+    private int GenerateHeader(FinancialGoal financialGoal, XGraphics graphics, int height)
+    {
+        var titleFormat =
+        new XStringFormat()
+        {
+            LineAlignment = XLineAlignment.Near,
+            Alignment = XStringAlignment.Center
+        };
+
+        graphics.DrawContent("RELATÓRIO", width: 20, height: height, font: _titleFont, format: titleFormat);
 
         var leftSpaceColumn1 = 20;
         var leftSpaceColumn2 = 300;
         height += 30;
 
-        graphics.DrawLine(XPens.Black, 20, height, page.Width - 20, height);
-        
+        graphics.DrawSimpleLine(height: height);
+
         height += 5;
 
-        graphics.DrawString
-            (
-                $"Meta Financeira: {financialGoal.Name}",
-                _subTitleFont,
-                XBrushes.Black,
-                new XRect(leftSpaceColumn1, height, page.Width, page.Height),
-                new XStringFormat()
-                {
-                    LineAlignment = XLineAlignment.Near,
-                    Alignment = XStringAlignment.Near
-                }
-            );
-
-        graphics.DrawString
-            (
-                $"Iniciada em: {financialGoal.CreatedAt}",
-                _subTitleFont,
-                XBrushes.Black,
-                new XRect(leftSpaceColumn2, height, page.Width, page.Height),
-                new XStringFormat()
-                {
-                    LineAlignment = XLineAlignment.Near,
-                    Alignment = XStringAlignment.Near
-                }
-            );
+        graphics.DrawContent($"Meta Financeira: {financialGoal.Name}", width: leftSpaceColumn1, height: height, font: _subTitleFont);
+        graphics.DrawContent($"Iniciada em: {financialGoal.CreatedAt}", width: leftSpaceColumn2, height: height, font: _subTitleFont);
 
         height += 20;
 
-        graphics.DrawString
-            (
-                $"Meta: R$ {financialGoal.GoalAmount}",
-                _subTitleFont,
-                XBrushes.Black,
-                new XRect(leftSpaceColumn1, height, page.Width, page.Height),
-                new XStringFormat()
-                {
-                    LineAlignment = XLineAlignment.Near,
-                    Alignment = XStringAlignment.Near
-                }
-            );
-
-        graphics.DrawString
-            (
-                $"Status: {financialGoal.Status}",
-                _subTitleFont,
-                XBrushes.Black,
-                new XRect(leftSpaceColumn2, height, page.Width, page.Height),
-                new XStringFormat()
-                {
-                    LineAlignment = XLineAlignment.Near,
-                    Alignment = XStringAlignment.Near
-                }
-            );
+        graphics.DrawContent($"Meta: R$ {financialGoal.GoalAmount}", width: leftSpaceColumn1, height: height, font: _subTitleFont);
+        graphics.DrawContent($"Status: {financialGoal.Status}", width: leftSpaceColumn2, height: height, font: _subTitleFont);
 
         height += 20;
 
@@ -158,129 +120,48 @@ public sealed class ReportService : IReportService
 
         if (!string.IsNullOrWhiteSpace(deadline))
         {
-            graphics.DrawString
-                (
-                    $"{deadline}",
-                    _subTitleFont,
-                    XBrushes.Black,
-                    new XRect(leftSpaceColumn1, height, page.Width, page.Height),
-                    new XStringFormat()
-                    {
-                        LineAlignment = XLineAlignment.Near,
-                        Alignment = XStringAlignment.Near
-                    }
-                );
+            graphics.DrawContent($"{deadline}", width: leftSpaceColumn1, height: height, font: _subTitleFont);
 
             if (!string.IsNullOrWhiteSpace(interest))
-            {
-                graphics.DrawString
-                    (
-                        $"{interest}",
-                        _subTitleFont,
-                        XBrushes.Black,
-                        new XRect(leftSpaceColumn2, height, page.Width, page.Height),
-                        new XStringFormat()
-                        {
-                            LineAlignment = XLineAlignment.Near,
-                            Alignment = XStringAlignment.Near
-                        }
-                    );
-            }
-        }        
-        else if (!string.IsNullOrWhiteSpace(interest))
-        {
-            graphics.DrawString
-                (
-                    $"{interest}",
-                    _subTitleFont,
-                    XBrushes.Black,
-                    new XRect(leftSpaceColumn1, height, page.Width, page.Height),
-                    new XStringFormat()
-                    {
-                        LineAlignment = XLineAlignment.Near,
-                        Alignment = XStringAlignment.Near
-                    }
-                );
+                graphics.DrawContent($"{interest}", width: leftSpaceColumn2, height: height, font: _subTitleFont);
         }
+        else if (!string.IsNullOrWhiteSpace(interest))
+            graphics.DrawContent($"{interest}", width: leftSpaceColumn1, height: height, font: _subTitleFont);
 
         height += 20;
 
-        graphics.DrawLine(XPens.Black, 20, height, page.Width - 20, height);
+        graphics.DrawSimpleLine(height: height);
 
         return height;
     }
 
-    private int GenerateByType(string transactionType, List<Transaction> transactions, XGraphics graphics, PdfPage page, int height)
+    private int GenerateByType(string transactionType, List<Transaction> transactions, XGraphics graphics, int height)
     {
-        graphics.DrawString(
-            $"{transactionType.ToUpper()}",
-            _subTitleFont,
-            XBrushes.Black,
-            new XRect(20, height, page.Width, page.Height),
-            new XStringFormat()
-            {
-                LineAlignment = XLineAlignment.Near,
-                Alignment = XStringAlignment.Near
-            });
+        graphics.DrawContent($"{transactionType.ToUpper()}", width: 20, height: height, font: _subTitleFont);
 
         foreach (var transaction in transactions.OrderBy(t => t.TransactionDate))
         {
             height += 18;
-            GenerateTransaction(transaction, graphics, page, height);
+            GenerateTransaction(transaction, graphics, height);
         }
 
         height += 20;
-        graphics.DrawString(
-        $"Total de Transações: {transactions.Count}",
-              _subTitleFont,
-              XBrushes.Black,
-              new XRect(20, height, page.Width, page.Height),
-              new XStringFormat()
-              {
-                  LineAlignment = XLineAlignment.Near,
-                  Alignment = XStringAlignment.Near
-              });
+
+        graphics.DrawContent($"Total de Transações: {transactions.Count}", width: 20, height: height, font: _subTitleFont);
 
         height += 20;
 
-        graphics.DrawLine(XPens.Black, 20, height, page.Width - 20, height);
+        graphics.DrawSimpleLine(height: height);
 
         return height;
     }
 
-    private void GenerateTransaction(Transaction transaction, XGraphics graphics, PdfPage page, int height)
+    private void GenerateTransaction(Transaction transaction, XGraphics graphics, int height)
     {
-        graphics.DrawString(
-            $"Valor: {transaction.Amount}",
-            _subTextFont,
-            XBrushes.Black,
-            new XRect(20, height, page.Width, page.Height),
-            new XStringFormat()
-            {
-                LineAlignment = XLineAlignment.Near,
-                Alignment = XStringAlignment.Near
-            });
+        graphics.DrawContent($"Valor: {transaction.Amount}", width: 20, height: height, font: _contentFont);
 
-        graphics.DrawString(
-            $"Data da Transação: {transaction.TransactionDate:dd-MM-yyyy}",
-            _subTextFont,
-            XBrushes.Black,
-            new XRect(200, height, page.Width, page.Height),
-            new XStringFormat()
-            {
-                LineAlignment = XLineAlignment.Near,
-                Alignment = XStringAlignment.Near
-            });
+        graphics.DrawContent($"Data da Transação: {transaction.TransactionDate:dd-MM-yyyy}", width: 200, height: height, font: _contentFont);
 
-        graphics.DrawString(
-            $"Estornada: {(transaction.Active ? "Não" : "Sim")}",
-            _subTextFont,
-            XBrushes.Black,
-            new XRect(400, height, page.Width, page.Height),
-            new XStringFormat()
-            {
-                LineAlignment = XLineAlignment.Near,
-                Alignment = XStringAlignment.Near
-            });
+        graphics.DrawContent($"Estornada: {(transaction.Active ? "Não" : "Sim")}", width: 400, height: height, font: _contentFont);
     }
 }

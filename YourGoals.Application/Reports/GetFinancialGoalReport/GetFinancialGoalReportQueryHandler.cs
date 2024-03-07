@@ -5,9 +5,9 @@ using MediatR;
 using YourGoals.Core.Results;
 using YourGoals.Domain.FinancialGoals.Errors;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Errors;
 using YourGoals.Application.Reports.Service;
-using YourGoals.Application.Reports.Models;
+using YourGoals.Application.Abstractions.Errors;
+using YourGoals.Application.Abstractions.EmailApi;
 
 namespace YourGoals.Application.Reports.GetFinancialGoalReport;
 
@@ -15,12 +15,12 @@ public sealed class GetFinancialGoalReportQueryHandler : IRequestHandler<GetFina
 {
     private readonly IFinancialGoalRepository _financialGoalRepository;
     private readonly IReportService _reportService;
-    private readonly IMailApi _mailApi;
+    private readonly IEmailApi _mailApi;
 
     public GetFinancialGoalReportQueryHandler(
         IFinancialGoalRepository financialGoalRepository,
         IReportService reportService,
-        IMailApi mailApi)
+        IEmailApi mailApi)
     {
         _financialGoalRepository = financialGoalRepository;
         _reportService = reportService;
