@@ -10,7 +10,7 @@ using YourGoals.Core.Repositories;
 using YourGoals.Core.Results.Errors;
 using YourGoals.Domain.FinancialGoals.Errors;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Errors;
+using YourGoals.Application.Abstractions.Errors;
 
 namespace YourGoals.Application.FinancialGoals.UploadFinancialGoalCover;
 

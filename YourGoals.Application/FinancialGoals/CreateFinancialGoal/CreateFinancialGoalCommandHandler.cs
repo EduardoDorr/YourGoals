@@ -3,11 +3,11 @@
 using MediatR;
 
 using YourGoals.Core.Results;
+using YourGoals.Core.Repositories;
 using YourGoals.Domain.FinancialGoals.Entities;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Errors;
 using YourGoals.Domain.FinancialGoals.Errors;
-using YourGoals.Core.Repositories;
+using YourGoals.Application.Abstractions.Errors;
 
 namespace YourGoals.Application.FinancialGoals.CreateFinancialGoal;
 

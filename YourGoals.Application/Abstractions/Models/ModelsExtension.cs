@@ -1,4 +1,4 @@
-﻿namespace YourGoals.Application.Shared.Models;
+﻿namespace YourGoals.Application.Abstractions.Models;
 
 public static class ModelsExtension
 {

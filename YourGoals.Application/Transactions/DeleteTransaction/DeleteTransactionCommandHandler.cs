@@ -3,12 +3,12 @@
 using MediatR;
 
 using YourGoals.Core.Results;
+using YourGoals.Core.Repositories;
 using YourGoals.Domain.Transactions.Errors;
 using YourGoals.Domain.Transactions.Interfaces;
 using YourGoals.Domain.FinancialGoals.Services;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Errors;
-using YourGoals.Core.Repositories;
+using YourGoals.Application.Abstractions.Errors;
 
 namespace YourGoals.Application.Transactions.DeleteTransaction;
 

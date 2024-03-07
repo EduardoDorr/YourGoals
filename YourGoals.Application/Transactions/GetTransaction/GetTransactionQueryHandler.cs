@@ -3,10 +3,10 @@
 using MediatR;
 
 using YourGoals.Core.Results;
-using YourGoals.Application.Errors;
-using YourGoals.Application.Transactions.Models;
 using YourGoals.Domain.Transactions.Errors;
 using YourGoals.Domain.Transactions.Interfaces;
+using YourGoals.Application.Transactions.Models;
+using YourGoals.Application.Abstractions.Errors;
 
 namespace YourGoals.Application.Transactions.GetTransaction;
 

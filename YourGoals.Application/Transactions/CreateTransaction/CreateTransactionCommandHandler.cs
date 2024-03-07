@@ -3,14 +3,16 @@
 using MediatR;
 
 using YourGoals.Core.Results;
-using YourGoals.Domain.Transactions.Services;
+using YourGoals.Core.Repositories;
+using YourGoals.Domain.FinancialGoals.Enums;
+using YourGoals.Domain.FinancialGoals.Errors;
+using YourGoals.Domain.FinancialGoals.Events;
 using YourGoals.Domain.FinancialGoals.Services;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Errors;
-using YourGoals.Domain.FinancialGoals.Errors;
 using YourGoals.Domain.Transactions.Errors;
+using YourGoals.Domain.Transactions.Services;
 using YourGoals.Domain.Transactions.Interfaces;
-using YourGoals.Core.Repositories;
+using YourGoals.Application.Abstractions.Errors;
 
 namespace YourGoals.Application.Transactions.CreateTransaction;
 
@@ -55,8 +57,8 @@ public sealed class CreateTransactionCommandHandler : IRequestHandler<CreateTran
         if (!financialGoalResult.Success)
             return Result.Fail<Guid>(new HttpStatusCodeError(financialGoalResult.Errors[0], HttpStatusCode.BadRequest));
 
-        // Do something with the financial goal's status information
-        // Maybe create a notification to send a e-mail about the financial goal status completition
+        if (financialGoal.Status == FinancialGoalStatus.Completed)
+            financialGoal.RaiseEvent(new FinancialGoalCompletedEvent(financialGoal.Id));
 
         _transactionRepository.Create(transaction);
         _financialGoalRepository.Update(financialGoal);

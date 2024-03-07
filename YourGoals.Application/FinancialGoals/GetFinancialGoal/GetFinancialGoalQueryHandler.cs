@@ -3,10 +3,10 @@
 using MediatR;
 
 using YourGoals.Core.Results;
-using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Errors;
-using YourGoals.Application.FinancialGoals.Models;
 using YourGoals.Domain.FinancialGoals.Errors;
+using YourGoals.Domain.FinancialGoals.Interfaces;
+using YourGoals.Application.Abstractions.Errors;
+using YourGoals.Application.FinancialGoals.Models;
 
 namespace YourGoals.Application.FinancialGoals.GetFinancialGoal;
 

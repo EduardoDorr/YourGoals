@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using YourGoals.Core.Results.Errors;
-using YourGoals.Application.Errors;
+using YourGoals.Application.Abstractions.Errors;
 
 namespace YourGoals.API.Extensions;
 
