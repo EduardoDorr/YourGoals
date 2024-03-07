@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 using YourGoals.Core.Models;
 using YourGoals.Core.Entities;
+using YourGoals.Core.Repositories;
 using YourGoals.Infrastructure.Contexts;
 using YourGoals.Infrastructure.Extensions;
-using YourGoals.Core.Repositories;
 
 namespace YourGoals.Infrastructure.Repositories;
 
@@ -34,6 +34,13 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     public async Task<TEntity?> GetSingleByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Set<TEntity>().SingleOrDefaultAsync(predicate, cancellationToken);
+    }
+
+    public async Task<PaginationResult<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> predicate, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        var entities = _dbContext.Set<TEntity>().Where(predicate).AsQueryable();
+
+        return await entities.GetPaged(page, pageSize, cancellationToken);
     }
 
     public void Create(TEntity entity)

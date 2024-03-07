@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 using YourGoals.Core.Models;
 using YourGoals.Domain.Transactions.Entities;
+using YourGoals.Domain.Transactions.Interfaces;
 using YourGoals.Infrastructure.Contexts;
 using YourGoals.Infrastructure.Extensions;
-using YourGoals.Domain.Transactions.Interfaces;
 
 namespace YourGoals.Infrastructure.Repositories;
 
@@ -36,6 +36,13 @@ public class TransactionRepository : ITransactionRepository
         return await _dbContext.Transactions.SingleOrDefaultAsync(predicate, cancellationToken);
     }
 
+    public async Task<PaginationResult<Transaction>> GetAllByAsync(Expression<Func<Transaction, bool>> predicate, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        var transactions = _dbContext.Transactions.Where(predicate).AsQueryable();
+
+        return await transactions.GetPaged(page, pageSize, cancellationToken);
+    }
+
     public void Create(Transaction financialGoal)
     {
         _dbContext.Transactions.Add(financialGoal);
@@ -49,5 +56,5 @@ public class TransactionRepository : ITransactionRepository
     public void Delete(Transaction transaction)
     {
         _dbContext.Transactions.Remove(transaction);
-    }
+    }    
 }

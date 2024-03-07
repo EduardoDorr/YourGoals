@@ -36,6 +36,13 @@ public class FinancialGoalRepository : IFinancialGoalRepository
         return await _dbContext.FinancialGoals.SingleOrDefaultAsync(predicate, cancellationToken);
     }
 
+    public async Task<PaginationResult<FinancialGoal>> GetAllByAsync(Expression<Func<FinancialGoal, bool>> predicate, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        var transactions = _dbContext.FinancialGoals.Where(predicate).AsQueryable();
+
+        return await transactions.GetPaged(page, pageSize, cancellationToken);
+    }
+
     public void Create(FinancialGoal financialGoal)
     {
         _dbContext.FinancialGoals.Add(financialGoal);
