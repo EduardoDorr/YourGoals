@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using YourGoals.Core.Repositories;
 using YourGoals.Domain.Transactions.Interfaces;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Reports.Service;
-using YourGoals.Infrastructure.MailApi;
+using YourGoals.Application.Abstractions.EmailApi;
+using YourGoals.Infrastructure.EmailApi;
 using YourGoals.Infrastructure.Contexts;
 using YourGoals.Infrastructure.Repositories;
+using YourGoals.Infrastructure.Interceptors;
+using YourGoals.Infrastructure.BackgroundJobs;
 
 namespace YourGoals.Infrastructure;
 
@@ -17,9 +19,11 @@ public static class InfrastructureModule
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContexts(configuration)
+                .AddInterceptors()
                 .AddRepositories()
                 .AddUnitOfWork()
                 .AddServices()
+                .AddBackgorundJobs()
                 .AddHttpClients(configuration);
 
         return services;
@@ -29,10 +33,19 @@ public static class InfrastructureModule
     {
         var connectionString = configuration["YouGoalsConnectionString"];
 
-        services.AddDbContext<YourGoalsDbContext>(opts =>
+        services.AddDbContext<YourGoalsDbContext>((sp, opts) =>
         {
-            opts.UseSqlServer(connectionString);
+            opts.UseSqlServer(connectionString)
+                .AddInterceptors(
+                    sp.GetRequiredService<PublishDomainEventsToOutBoxMessagesInterceptor>());
         });
+
+        return services;
+    }
+
+    private static IServiceCollection AddInterceptors(this IServiceCollection services)
+    {
+        services.AddSingleton<PublishDomainEventsToOutBoxMessagesInterceptor>();
 
         return services;
     }
@@ -41,8 +54,6 @@ public static class InfrastructureModule
     {
         services.AddTransient<IFinancialGoalRepository, FinancialGoalRepository>();
         services.AddTransient<ITransactionRepository, TransactionRepository>();
-        //services.AddTransient <IGenericRepository<FinancialGoalRepository>, FinancialGoalRepository();
-        //services.AddTransient <IGenericRepository<TransactionRepository>, TransactionRepository();
 
         return services;
     }
@@ -56,7 +67,14 @@ public static class InfrastructureModule
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddTransient<IMailApi, WebMailApi>();
+        services.AddTransient<IEmailApi, WebMailApi>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddBackgorundJobs(this IServiceCollection services)
+    {
+        services.AddHostedService<ProcessOutboxMessagesJob>();
 
         return services;
     }

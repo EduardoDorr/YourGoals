@@ -1,5 +1,7 @@
-﻿namespace YourGoals.Core.Events;
+﻿using MediatR;
 
-public interface IDomainEvent
+namespace YourGoals.Core.Events;
+
+public interface IDomainEvent : INotification
 {
 }

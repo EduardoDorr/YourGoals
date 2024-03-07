@@ -28,25 +28,20 @@ public abstract class BaseEntity
     }
 
     public virtual void Activate()
-    {
-        Active = true;
-
-        UpdatedAt = DateTime.Now;
-    }
+        => Active = true;
 
     public virtual void Deactivate()
-    {
-        Active = false;
+        => Active = false;
 
-        UpdatedAt = DateTime.Now;
-    }
+    public virtual void SetUpdatedAtDate(DateTime updatedAtDate)
+        => UpdatedAt = updatedAtDate;
 
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
-        => _domainEvents;
+        => _domainEvents.ToList();
 
     public void ClearDomainEvents()
         => _domainEvents.Clear();
 
-    protected void RaiseEvent(IDomainEvent domainEvent)
+    protected void RaiseDomainEvent(IDomainEvent domainEvent)
         => _domainEvents.Add(domainEvent);
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YourGoals.Infrastructure.Contexts;
 
@@ -11,9 +12,11 @@ using YourGoals.Infrastructure.Contexts;
 namespace YourGoals.Infrastructure.Migrations
 {
     [DbContext(typeof(YourGoalsDbContext))]
-    partial class YourGoalsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240307034819_AddOutboxMessagePattern")]
+    partial class AddOutboxMessagePattern
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
