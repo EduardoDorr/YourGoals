@@ -1,4 +1,5 @@
-﻿using YourGoals.Core.Entities;
+﻿using YourGoals.Core.Events;
+using YourGoals.Core.Entities;
 using YourGoals.Domain.FinancialGoals.Enums;
 using YourGoals.Domain.FinancialGoals.Builder;
 using YourGoals.Domain.Transactions.Entities;
@@ -56,6 +57,7 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
         CoverImage = coverImage;
     }
 
+    public void RaiseEvent(IDomainEvent domainEvent) => RaiseDomainEvent(domainEvent);
     public void Deposit(decimal amount) => CurrentAmount += amount;
     public void Withdraw(decimal amount) => CurrentAmount -= amount;
     public bool GoalAchieved() => CurrentAmount >= GoalAmount;
