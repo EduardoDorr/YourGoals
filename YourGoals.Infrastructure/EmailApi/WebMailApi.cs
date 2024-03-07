@@ -4,12 +4,11 @@ using System.Text.Json;
 
 using YourGoals.Core.Results;
 using YourGoals.Core.Results.Errors;
-using YourGoals.Application.Reports.Models;
-using YourGoals.Application.Reports.Service;
+using YourGoals.Application.Abstractions.EmailApi;
 
-namespace YourGoals.Infrastructure.MailApi;
+namespace YourGoals.Infrastructure.EmailApi;
 
-public sealed class WebMailApi : IMailApi
+public sealed class WebMailApi : IEmailApi
 {
     private readonly IHttpClientFactory _httpClientFactory;
 

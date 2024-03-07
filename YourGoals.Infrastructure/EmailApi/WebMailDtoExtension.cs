@@ -1,6 +1,6 @@
-﻿using YourGoals.Application.Reports.Models;
+﻿using YourGoals.Application.Abstractions.EmailApi;
 
-namespace YourGoals.Infrastructure.MailApi;
+namespace YourGoals.Infrastructure.EmailApi;
 
 public static class WebMailDtoExtension
 {
