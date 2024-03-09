@@ -1,7 +1,7 @@
 ﻿using PdfSharpCore.Pdf;
 using PdfSharpCore.Drawing;
 
-namespace YourGoals.Application.Reports.Service;
+namespace YourGoals.Application.Reports.Services;
 
 public static class ReportServiceExtension
 {

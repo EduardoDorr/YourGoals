@@ -36,11 +36,11 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
         return await _dbContext.Set<TEntity>().SingleOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<PaginationResult<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> predicate, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         var entities = _dbContext.Set<TEntity>().Where(predicate).AsQueryable();
 
-        return await entities.GetPaged(page, pageSize, cancellationToken);
+        return await entities.ToListAsync(cancellationToken);
     }
 
     public void Create(TEntity entity)

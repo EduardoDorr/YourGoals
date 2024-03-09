@@ -5,9 +5,9 @@ using MediatR;
 using YourGoals.Core.Results;
 using YourGoals.Domain.FinancialGoals.Errors;
 using YourGoals.Domain.FinancialGoals.Interfaces;
-using YourGoals.Application.Reports.Service;
 using YourGoals.Application.Abstractions.Errors;
 using YourGoals.Application.Abstractions.EmailApi;
+using YourGoals.Application.Reports.Services;
 
 namespace YourGoals.Application.Reports.GetFinancialGoalReport;
 

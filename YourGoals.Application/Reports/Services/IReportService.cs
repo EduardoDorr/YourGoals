@@ -1,7 +1,7 @@
 ﻿using YourGoals.Core.Results;
 using YourGoals.Domain.FinancialGoals.Entities;
 
-namespace YourGoals.Application.Reports.Service;
+namespace YourGoals.Application.Reports.Services;
 
 public interface IReportService
 {

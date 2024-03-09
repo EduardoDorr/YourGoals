@@ -8,7 +8,7 @@ using YourGoals.Domain.Transactions.Enums;
 using YourGoals.Domain.Transactions.Entities;
 using YourGoals.Domain.FinancialGoals.Entities;
 
-namespace YourGoals.Application.Reports.Service;
+namespace YourGoals.Application.Reports.Services;
 
 public sealed class ReportService : IReportService
 {

@@ -2,7 +2,6 @@
 
 using MediatR;
 
-using YourGoals.Core.Models;
 using YourGoals.Core.Results;
 using YourGoals.Domain.Transactions.Entities;
 using YourGoals.Domain.Transactions.Interfaces;
@@ -10,7 +9,7 @@ using YourGoals.Application.Transactions.Models;
 
 namespace YourGoals.Application.Reports.GetTransactionsReport;
 
-public sealed class GetTransactionsReportQueryHandler : IRequestHandler<GetTransactionsReportQuery, Result<PaginationResult<TransactionViewModel>>>
+public sealed class GetTransactionsReportQueryHandler : IRequestHandler<GetTransactionsReportQuery, Result<IEnumerable<TransactionViewModel>>>
 {
     private readonly ITransactionRepository _transactionRepository;
 
@@ -19,28 +18,16 @@ public sealed class GetTransactionsReportQueryHandler : IRequestHandler<GetTrans
         _transactionRepository = transactionRepository;
     }
 
-    public async Task<Result<PaginationResult<TransactionViewModel>>> Handle(GetTransactionsReportQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<TransactionViewModel>>> Handle(GetTransactionsReportQuery request, CancellationToken cancellationToken)
     {
-        var paginationTransactions =
+        var transactions =
             await _transactionRepository.GetAllByAsync(
                 DateBetweenFactory(request),
-                request.Page,
-                request.PageSize,
                 cancellationToken);
 
-        var transactionsViewModel = paginationTransactions.Data.ToViewModel();
+        var transactionsViewModel = transactions.ToViewModel();
 
-        var paginationTransactionsViewModel =
-            new PaginationResult<TransactionViewModel>
-            (
-                paginationTransactions.Page,
-                paginationTransactions.PageSize,
-                paginationTransactions.TotalCount,
-                paginationTransactions.TotalPages,
-                transactionsViewModel.ToList()
-            );
-
-        return Result.Ok(paginationTransactionsViewModel);
+        return Result.Ok(transactionsViewModel);
     }
 
     private static Expression<Func<Transaction, bool>> DateBetweenFactory(GetTransactionsReportQuery request)

@@ -36,11 +36,11 @@ public class FinancialGoalRepository : IFinancialGoalRepository
         return await _dbContext.FinancialGoals.SingleOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<PaginationResult<FinancialGoal>> GetAllByAsync(Expression<Func<FinancialGoal, bool>> predicate, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<FinancialGoal>> GetAllByAsync(Expression<Func<FinancialGoal, bool>> predicate, CancellationToken cancellationToken = default)
     {
         var transactions = _dbContext.FinancialGoals.Where(predicate).AsQueryable();
 
-        return await transactions.GetPaged(page, pageSize, cancellationToken);
+        return await transactions.ToListAsync(cancellationToken);
     }
 
     public void Create(FinancialGoal financialGoal)
