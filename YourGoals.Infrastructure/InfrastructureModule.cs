@@ -23,7 +23,7 @@ public static class InfrastructureModule
                 .AddRepositories()
                 .AddUnitOfWork()
                 .AddServices()
-                .AddBackgorundJobs()
+                .AddBackgroundJobs()
                 .AddHttpClients(configuration);
 
         return services;
@@ -72,7 +72,7 @@ public static class InfrastructureModule
         return services;
     }
 
-    private static IServiceCollection AddBackgorundJobs(this IServiceCollection services)
+    private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
     {
         services.AddHostedService<ProcessOutboxMessagesJob>();
 
