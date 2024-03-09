@@ -1,8 +1,9 @@
 ﻿using YourGoals.Core.Events;
 using YourGoals.Application.Abstractions.EmailApi;
 using YourGoals.Domain.FinancialGoals.Interfaces;
+using YourGoals.Domain.FinancialGoals.Events;
 
-namespace YourGoals.Domain.FinancialGoals.Events.FinancialGoalCompleted;
+namespace YourGoals.Application.Transactions.Events;
 
 public sealed class FinancialGoalCompletedEventHandler : IDomainEventHandler<FinancialGoalCompletedEvent>
 {

@@ -4,7 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using YourGoals.Application.Reports.Service;
+
+using YourGoals.Application.BackgroundJobs;
+using YourGoals.Application.Reports.Services;
+using YourGoals.Application.Transactions.Services;
 
 namespace YourGoals.Application;
 
@@ -14,7 +17,8 @@ public static class ApplicationModule
     {
         services.AddMediator()
                 .AddValidator()
-                .AddServices();
+                .AddServices()
+                .AddBackgroundJobs();
 
         return services;
     }
@@ -40,6 +44,14 @@ public static class ApplicationModule
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddTransient<IReportService, ReportService>();
+        services.AddTransient<IInterestTransactionService, InterestTransactionService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
+    {
+        services.AddHostedService<ProcessInterestTransactionsJob>();
 
         return services;
     }

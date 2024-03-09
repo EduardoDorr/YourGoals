@@ -8,7 +8,9 @@ using YourGoals.Domain.FinancialGoals.Enums;
 using YourGoals.Domain.FinancialGoals.Errors;
 using YourGoals.Domain.FinancialGoals.Events;
 using YourGoals.Domain.FinancialGoals.Services;
+using YourGoals.Domain.FinancialGoals.Entities;
 using YourGoals.Domain.FinancialGoals.Interfaces;
+using YourGoals.Domain.Transactions.Enums;
 using YourGoals.Domain.Transactions.Errors;
 using YourGoals.Domain.Transactions.Services;
 using YourGoals.Domain.Transactions.Interfaces;
@@ -45,6 +47,9 @@ public sealed class CreateTransactionCommandHandler : IRequestHandler<CreateTran
         if (financialGoal is null)
             return Result.Fail<Guid>(new HttpStatusCodeError(FinancialGoalErrors.NotFound, HttpStatusCode.NotFound));
 
+        if (CheckForInterestTypeTransactionToday(request, financialGoal))
+            return Result.Fail<Guid>(new HttpStatusCodeError(TransactionErrors.TransactionWasAlreadyMade, HttpStatusCode.BadRequest));
+
         var transactionResult = _transactionService.Create(financialGoal, request.Amount, request.TransactionDate, request.Type);
 
         if (!transactionResult.Success)
@@ -69,5 +74,15 @@ public sealed class CreateTransactionCommandHandler : IRequestHandler<CreateTran
             return Result.Fail<Guid>(new HttpStatusCodeError(TransactionErrors.CannotBeCreated, HttpStatusCode.InternalServerError));
 
         return Result.Ok(transaction.Id);
+    }
+
+    private static bool CheckForInterestTypeTransactionToday(CreateTransactionCommand request, FinancialGoal financialGoal)
+    {
+        if (request.Type != TransactionType.Interest)
+            return false;
+
+        return financialGoal.Transactions
+            .Any(t => t.Type == TransactionType.Interest &&
+                      t.TransactionDate.Date == request.TransactionDate.Date);
     }
 }

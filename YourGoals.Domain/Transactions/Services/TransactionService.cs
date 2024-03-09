@@ -41,7 +41,7 @@ public sealed class TransactionService : ITransactionService
         if (amount <= 0)
             return Result.Fail(TransactionErrors.AmountIsNotValid);
 
-        if (transactionDate < DateTime.Now)
+        if (transactionDate < DateTime.Today)
             return Result.Fail(TransactionErrors.TransactionDateIsNotValid);
 
         return Result.Ok();

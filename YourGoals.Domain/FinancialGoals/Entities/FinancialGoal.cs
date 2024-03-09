@@ -60,6 +60,7 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
     public void RaiseEvent(IDomainEvent domainEvent) => RaiseDomainEvent(domainEvent);
     public void Deposit(decimal amount) => CurrentAmount += amount;
     public void Withdraw(decimal amount) => CurrentAmount -= amount;
+    public decimal GetInterestAmount() => InterestRate.HasValue ? ComputeInterestAmount() : default;
     public bool GoalAchieved() => CurrentAmount >= GoalAmount;
     public void ChangeStatus(FinancialGoalStatus status) => Status = status;
 
@@ -76,6 +77,11 @@ public class FinancialGoal : BaseEntity, IAggregateRoot
         Status = FinancialGoalStatus.Cancelled;
 
         base.Deactivate();
+    }
+
+    private decimal ComputeInterestAmount()
+    {
+        return CurrentAmount * ((decimal)InterestRate / 100.0m);
     }
 
     private decimal? GetIdealMonthlySaving()

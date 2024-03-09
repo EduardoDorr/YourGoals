@@ -27,4 +27,7 @@ public record TransactionErrors(string Code, string Message) : IError
 
     public static readonly Error TransactionDateIsNotValid =
         new("Transaction.TransactionDateIsNotValid", "Transaction Date cannot be earlier than today");
+
+    public static readonly Error TransactionWasAlreadyMade =
+        new("Transaction.TransactionWasAlreadyMade", "This transaction was already made");
 }
